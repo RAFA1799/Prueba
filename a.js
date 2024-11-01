@@ -1,27 +1,37 @@
-// Escuchar cambios en el contenedor del chat y manipular el texto de las respuestas
 document.addEventListener("DOMContentLoaded", function () {
-    const chatContainer = document.querySelector(".ktt10-iframe"); // Verifica el selector correcto en el DOM
+    // Seleccionar el contenedor del área de chat
+    const chatArea = document.querySelector(".chat-area");
 
-    if (chatContainer) {
+    if (chatArea) {
+        // Crear el observer para detectar cambios en el DOM
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                if (mutation.type === 'childList') {
-                    const newMessage = mutation.addedNodes[0];
+                mutation.addedNodes.forEach((node) => {
+                    // Verificar si el nodo agregado es un mensaje del bot o del usuario
+                    if (node.nodeType === 1) { // Asegura que es un elemento
+                        const messageTextElement = node.querySelector('.message-text pre');
+                        
+                        if (messageTextElement) {
+                            const messageText = messageTextElement.innerText;
 
-                    // Filtrar solo los mensajes del bot
-                    if (newMessage && newMessage.classList.contains('other-message')) {
-                        const messageText = newMessage.innerText || newMessage.textContent;
-
-                        // Manipular el texto de la respuesta
-                        console.log("Respuesta del bot:", messageText);
-                        // Puedes agregar aquí cualquier lógica para manipular el texto
+                            // Diferenciar mensajes del bot y del usuario
+                            if (node.classList.contains('other-message')) {
+                                console.log("Mensaje del bot:", messageText);
+                                // Aquí puedes manipular el mensaje del bot
+                            } else if (node.classList.contains('my-message')) {
+                                console.log("Mensaje del usuario:", messageText);
+                                // Aquí puedes manipular el mensaje del usuario
+                            }
+                        }
                     }
-                }
+                });
             });
         });
 
-        observer.observe(chatContainer, { childList: true, subtree: true });
+        // Configurar el observer para observar los cambios en el área del chat
+        observer.observe(chatArea, { childList: true, subtree: true });
     } else {
-        console.warn("Contenedor del chat no encontrado.");
+        console.warn("No se encontró el contenedor del área de chat.");
     }
 });
+
