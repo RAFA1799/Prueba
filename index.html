@@ -3,90 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: white;
-            margin: 0;
-            padding: 20px;
-        }
-        #chat {
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            margin: auto;
-        }
-        #messages {
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-        }
-        .message {
-            margin: 5px 0;
-            padding: 5px;
-            border-radius: 3px;
-        }
-        .user {
-            background-color: #d1e7dd;
-        }
-        .bot {
-            background-color: #f8d7da;
-        }
-    </style>
+    <title>Prueba de API - Obtener Usuario</title>
 </head>
 <body>
-    <div id="chat">
-        <div id="messages"></div>
-        <input type="text" id="userInput" placeholder="Escribe tu mensaje...">
-        <button id="sendBtn">Enviar</button>
-    </div>
-
+    <h1> Usuario por ID</h1>
     <script>
-        const sendBtn = document.getElementById('sendBtn');
-        const userInput = document.getElementById('userInput');
-        const messages = document.getElementById('messages');
+        
+        const userId = '1000589870'; // Reemplaza 'USER_ID' con el ID real del usuario
 
-        sendBtn.addEventListener('click', async () => {
-            const userMessage = userInput.value;
-            addMessage(userMessage, 'user');
-            userInput.value = '';
-
-            try {
-                const response = await fetch('https://app.chatgptbuilder.io/api/users/1170050/send/text', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': '1170050.YpHixBpoqnT14OfkGOZowORgq2qpRHT62B5vZW'
-                    },
-                    body: JSON.stringify({ prompt: userMessage })
-                });
-
-                if (!response.ok) {
-                    throw new Error('Error en la respuesta de la API');
-                }
-
-                const data = await response.json();
-                console.log('Respuesta de la API:', data); // Mensaje para depuración
-                addMessage(data.text, 'bot'); // Asegúrate de que 'reply' sea la clave correcta en la respuesta
-            } catch (error) {
-                console.error('Error al enviar la solicitud:', error);
-                addMessage('Error al obtener respuesta del bot.', 'bot');
-            }
-        });
-
-        function addMessage(text, sender) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
-            messageDiv.textContent = text;
-            messages.appendChild(messageDiv);
-            messages.scrollTop = messages.scrollHeight; // Desplazar hacia abajo
-        }
-    </script>
+        // Realizar la solicitud GET a la API
+        fetch(`https://api.chatgptbuilder.io/users/1000589870`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `6kKJ8jrpTqrcZS03zLus`  // Reemplaza 'YOUR_API_KEY' con tu clave de API
+          }
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('Respuesta de la API:', data); // Imprime la respuesta en la consola
+        })
+        .catch(error => console.error('Error:', error));
+        
+        </script>
 </body>
 </html>
-
-
-
